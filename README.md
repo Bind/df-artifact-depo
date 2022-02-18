@@ -1,20 +1,11 @@
-# Forge Template
+Basic contract for pooling df artifacts outside of the game for shared use.
 
-A template for quickly getting started with forge
+- Tracks what deposits people have made so they can be rewarded post game.
+- Only permissioned users can withdraw.
+- Anyone can deposit.
+- Anyone can be whitelisted by existing blessed users.
 
-## Getting Started
-
-```
-mkdir my-project
-cd my-project
-forge init --template https://github.com/FrankieIsLost/forge-template
-git submodule update --init --recursive  ## initialize submodule dependencies
-npm install ## install development dependencies
-forge build
-forge test
-```
-
-## Features
+Scaffolded using https://github.com/FrankieIsLost/forge-template
 
 ### Testing Utilities
 
@@ -22,7 +13,7 @@ Includes a `Utilities.sol` contract with common testing methods (like creating u
 
 ### Preinstalled dependencies
 
-`ds-test` for testing, `forge-std` for better cheatcode UX, and `solmate` for optimized contract implementations.  
+`ds-test` for testing, `forge-std` for better cheatcode UX, and `solmate` for optimized contract implementations.
 
 ### Linting
 

@@ -17,8 +17,8 @@ contract DepoTest is DSTest {
     address payable[] internal users;
     address payable[] internal bad_users;
     Depo internal depo;
-    DFCore internal dfcore;
-    DFCore internal bad_core;
+    DFMock internal dfcore;
+    DFMock internal bad_core;
 
     function setUp() public {
         utils = new Utilities();
@@ -74,8 +74,7 @@ contract DepoTest is DSTest {
         uint256[] memory recs = depo.receipts(alice);
         assertEq(recs.length, 1);
         // Should no longer be able to withdraw
-        bool deposited = depo.deposits(0);
-        assert(!deposited);
+        assert(!depo.deposits(0));
     }
 
     function testBadBlessedDeposit() public {

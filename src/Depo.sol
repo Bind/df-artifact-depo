@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.0;
 import {ERC721TokenReceiver, ERC721} from "solmate/tokens/ERC721.sol";
-import "./DFCore.sol";
+import "./DFMock.sol";
 
 // Todo: Handle depositing same item multiple times
 
@@ -36,7 +36,8 @@ contract Depo is ERC721TokenReceiver {
 
     function withdrawArtifact(uint256 tokenId) public onlyMasterAtArms {
         require(deposits[tokenId], "TOKEN NOT DEPOSTED");
-        DFCore(DF_CORE).safeTransferFrom(address(this), msg.sender, tokenId);
+        DFMock(DF_CORE).safeTransferFrom(address(this), msg.sender, tokenId);
+        deposits[tokenId] = false;
     }
 
     function onERC721Received(
