@@ -8,8 +8,16 @@ contract Depo is ERC721TokenReceiver {
                                MODIFIERS
     //////////////////////////////////////////////////////////////*/
 
-    modifier onlyMasterAtArms() {
-        require(mastersAtArms[msg.sender], "ONLY_MAA");
+    modifier onlyOwner() {
+        require(owner == msg.sender, "ONLY_OWNER");
+        _;
+    }
+
+    modifier onlyMasterAtArmsOrOwner() {
+        require(
+            mastersAtArms[msg.sender] || owner == msg.sender,
+            "ONLY_MAA_OR_OWNER"
+        );
         _;
     }
 
@@ -21,11 +29,17 @@ contract Depo is ERC721TokenReceiver {
 
     event Withdrawl(address indexed withdrawer, uint256 indexed tokenId);
 
+    event Promote(address indexed promotor, address indexed promoted);
+
+    event Demote(address indexed demotor, address indexed demoted);
+
     /*///////////////////////////////////////////////////////////////
                                 STORAGE
     //////////////////////////////////////////////////////////////*/
 
     address public immutable dfCore;
+
+    address public immutable owner;
 
     mapping(address => bool) public mastersAtArms; // Can withdraw
 
@@ -37,6 +51,7 @@ contract Depo is ERC721TokenReceiver {
 
     constructor(address core, address[] memory blessed) {
         dfCore = core;
+        owner = msg.sender;
         for (uint256 i = 0; i < blessed.length; i++) {
             mastersAtArms[blessed[i]] = true;
         }
@@ -46,15 +61,21 @@ contract Depo is ERC721TokenReceiver {
                              ACCESS CONTROL
     //////////////////////////////////////////////////////////////*/
 
-    function promote(address pleb) public onlyMasterAtArms {
+    function promote(address pleb) public onlyOwner {
         mastersAtArms[pleb] = true;
+        emit Promote(msg.sender, pleb);
+    }
+
+    function demote(address pleb) public onlyOwner {
+        mastersAtArms[pleb] = false;
+        emit Demote(msg.sender, pleb);
     }
 
     /*///////////////////////////////////////////////////////////////
                                DEPO LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    function withdrawArtifact(uint256 tokenId) public onlyMasterAtArms {
+    function withdrawArtifact(uint256 tokenId) public onlyMasterAtArmsOrOwner {
         require(deposits[tokenId], "TOKEN NOT DEPOSTED");
         DFMock(dfCore).safeTransferFrom(address(this), msg.sender, tokenId);
         deposits[tokenId] = false;
