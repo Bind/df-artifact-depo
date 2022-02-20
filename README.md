@@ -3,7 +3,7 @@ Basic contract for pooling df artifacts outside of the game for shared use.
 - Tracks what deposits people have made so they can be rewarded post game.
 - Only permissioned users can withdraw.
 - Anyone can deposit.
-- Anyone can be whitelisted by existing blessed users.
+- Anyone can be whitelisted by owner.
 
 Scaffolded using https://github.com/FrankieIsLost/forge-template
 
