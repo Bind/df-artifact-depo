@@ -11,31 +11,31 @@ import {DFMock} from "./DFMock.sol";
 
 contract DepoTest is DSTest {
     Vm internal immutable vm = Vm(HEVM_ADDRESS);
-    address payable alice;
-    address payable bob;
+    address payable internal alice;
+    address payable internal bob;
     Utilities internal utils;
     address payable[] internal users;
-    address payable[] internal bad_users;
+    address payable[] internal badUsers;
     Depo internal depo;
     DFMock internal dfcore;
-    DFMock internal bad_core;
+    DFMock internal badCore;
 
     function setUp() public {
         utils = new Utilities();
         users = utils.createUsers(5);
         alice = users[0];
-        bad_users = utils.createUsers(5);
-        bob = bad_users[0];
+        badUsers = utils.createUsers(5);
+        bob = badUsers[0];
         vm.label(alice, "Alice");
         vm.label(bob, "Bob");
         dfcore = new DFMock();
-        bad_core = new DFMock();
+        badCore = new DFMock();
         address[] memory _users = new address[](5);
         for (uint256 i = 0; i < users.length; i++) {
             _users[i] = address(users[i]);
         }
         dfcore.createArtifacts(alice, 5);
-        bad_core.createArtifacts(alice, 5);
+        badCore.createArtifacts(alice, 5);
         depo = new Depo(address(dfcore), _users);
     }
 
@@ -76,7 +76,7 @@ contract DepoTest is DSTest {
         // Test Deposit flow from malicious contract
         vm.expectRevert("NOTCORE");
         // Depo should revert on malicious deposit
-        bad_core.safeTransferFrom(alice, address(depo), 1);
+        badCore.safeTransferFrom(alice, address(depo), 1);
         // Should have no receipts
         // Deposit should not be marked true
         assert(!depo.deposits(1));
