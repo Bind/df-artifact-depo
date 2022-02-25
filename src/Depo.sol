@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.0;
 import {ERC721TokenReceiver, ERC721} from "solmate/tokens/ERC721.sol";
-import "./DFMock.sol";
 
 contract Depo is ERC721TokenReceiver {
     /*///////////////////////////////////////////////////////////////
@@ -95,7 +94,7 @@ contract Depo is ERC721TokenReceiver {
 
     function withdrawArtifact(uint256 tokenId) public onlyRoles {
         require(deposits[tokenId], "TOKEN NOT DEPOSTED");
-        DFMock(dfCore).safeTransferFrom(address(this), msg.sender, tokenId);
+        ERC721(dfCore).safeTransferFrom(address(this), msg.sender, tokenId);
         deposits[tokenId] = false;
         emit Withdrawl(msg.sender, tokenId);
     }
@@ -105,7 +104,7 @@ contract Depo is ERC721TokenReceiver {
         address from,
         uint256 tokenId,
         bytes calldata
-    ) external returns (bytes4) {
+    ) external override returns (bytes4) {
         require(msg.sender == dfCore, "NOTCORE");
         deposits[tokenId] = true;
         emit Deposit(from, tokenId);
